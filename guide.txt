@@ -1,0 +1,19 @@
+- 1) Установить django и django rest framework
+pip install django
+pip install djangorestframework
+- 2) Создать ядро Django
+django-admin startproject core .
+- 3) Создать новое приложение wallet_app
+python manage.py startapp wallet_app
+- 4) Добавить в core/settings.py в INSTALLED_APPS: 'rest_framework' и 'wallet_app'
+- 5) Создать модельки в приложении wallet_app и выполнить миграции
+python manage.py makemigrations
+python manage.py migrate
+- 6) Запустить сервер
+python manage.py runserver
+
+
+-- 1) Создать CategorySerializer для модельки Category
+-- 2.1) Создать CategoryApiView, а также в нем прописать GET запрос.
+-- 2.2) ГЕТ запрос должен возвращать список всех категорий, которые есть в БД
+-- 3) В core/urls.py создать новый path к CategoryApiView
