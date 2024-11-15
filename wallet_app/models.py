@@ -15,3 +15,14 @@ class Spending(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Purchases(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField()
+    quantity = models.IntegerField()
+    day = models.ForeignKey('Days', on_delete=models.SET_NULL, null=True)
+
+
+class Days(models.Model):
+    name = models.CharField(max_length=255)

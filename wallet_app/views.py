@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -71,10 +71,36 @@ class SpendingApiView(APIView):
         return Response(data={'message': 'Spending Deleted!'}, status=status.HTTP_200_OK)
 
 
-# 1) Создать новую модель Income(name -> CharField, charge -> IntegerField)
-# 2) Для модели Income создать IncomeSerializer
-# 3) Создать вью IncomeApiView в которой нужно реализовать запросы:
-# 3.1. GET -> Вернуть все записи из Income
-# 3.2. POST -> Создать новый Income
-# 3.3. PATCH -> Обновить существующий Income по id
-# 3.4. DELETE -> Удалить существующий Income по id
+class PurchaseApiView(APIView):
+    permission_classes = [IsAuthenticated]
+    # IsAuthenticated -> Доступ есть только у авторизованных юзеров
+
+    def get(self, request):
+        purchases = Purchases.objects.all()
+        data = PurchaseSerializer(purchases, many=True).data
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class AuthApiView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        from django.contrib.auth import authenticate, login
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response(data={'message': 'Success!'}, status=status.HTTP_200_OK)
+        else:
+            return Response(data={'message': 'Username and/or password is not valid!'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogOutApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        from django.contrib.auth import logout
+        logout(request)
+        return Response(data={'message': 'Success!'}, status=status.HTTP_200_OK)

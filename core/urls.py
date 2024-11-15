@@ -23,4 +23,7 @@ urlpatterns = [
 
     path('test', TestApiView.as_view()),
     path('spending', SpendingApiView.as_view()),
+    path('purchases', PurchaseApiView.as_view()),
+    path('auth', AuthApiView.as_view()),
+    path('logout', LogOutApiView.as_view()),
 ]
